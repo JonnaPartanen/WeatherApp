@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<style>
+	
+	#weather{
+		width: 250px;
+		height: 300px;
+		border: 1px solid black;
+		text-align:center;
+		margin-left: 100px;
+		padding-top:20px;
+		font-size: 18px;
+		background-image: url(photo.jpg);
+		color:red;
+
+	}
+
+	#citysearch{
+
+		width:187px;
+		height: 30px;
+		color: red;
+		background-color:black;
+		font-size: 20px;
+		
+	}
+
+	#tekstialue{
+
+		width:250px;
+		height: 35px;
+		border: 1px solid black;
+		margin-left: 100px;
+		
+
+	}
+
+
+
+	#search{
+		height:34px;
+		position:absolute;
+		background-color:black;
+		color:red;
+	}
+	
+	</style>
+<head>
+	<title> WeatherApp </title>
+
+	<script>
+			
+			function loadWeather(){
+
+				var paikka = document.getElementById("citysearch").value;
+  				console.log(paikka);    
+ 				var url=" http://api.openweathermap.org/data/2.5/weather?q="+paikka+"&units=metric&mode=JSON&&&APPID=47d76bdf208e45f60184d0c2076aa334";
+  				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.open("GET" ,url, true);
+				xmlhttp.send();
+	
+				xmlhttp.onreadystatechange = function(){
+				if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				var xmlDoc  = xmlhttp.responseText;
+
+      			jsonObj = JSON.parse(xmlhttp.responseText);
+				var kuva = jsonObj.weather[0].icon;
+				
+		var data=document.getElementById("weather");
+		var d = new Date();
+		var n = d.getDate() + "." + (d.getMonth() + 1) + "." +d.getFullYear() ; 
+		data.innerHTML=n+"<br><br>"; 			
+		data.innerHTML+=jsonObj.main.temp+"&deg C <br>";
+     	data.innerHTML+="wind speed: "+jsonObj.wind.speed+" m/s <br>";
+      	data.innerHTML+="humdity: " +jsonObj.main.humidity+" % <br> ";
+      	data.innerHTML+="<img src=' http://openweathermap.org/img/w/"+kuva+".png 'width=100px> <br>";
+		data.innerHTML+=jsonObj.weather[0].description+"<br>";
+		var nousu = new Date(jsonObj.sys.sunrise*1000);
+		data.innerHTML+="sunrise: "+nousu.getHours()+":"+nousu.getMinutes()+" ";
+
+		var lasku = new Date(jsonObj.sys.sunset*1000);
+		data.innerHTML+="sunset: "+lasku.getHours()+":"+lasku.getMinutes();
+		
+		document.getElementById("citysearch").value="";
+
+
+    }
+}
+}
+
+function enterPainallus(event){
+
+  if(event.keyCode==13){ 
+	loadWeather();
+  }
+}
+			
+			
+	</script>
+	
+</head>
+<body>
+	<h1></h1>
+
+<div id="tekstialue">
+	<input id="citysearch" onkeydown="enterPainallus(event)" placeholder="Add city"></input>
+	<button id="search" onclick="loadWeather()">Search</button>
+</div>
+
+	<div id= "weather"><img src="">
+	
+	</div>
+</body>
+</html>
